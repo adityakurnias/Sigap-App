@@ -6,34 +6,36 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 class ReportController extends Controller
 {
-    // 1. Menampilkan Form Lapor
     public function index()
     {
-        return view('user.lapor');
+        // LOGIKA: Ambil laporan DIMANA (Where) id pemiliknya == ID saya yang sedang login
+        $myReports = Report::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('user.lapor', compact('myReports'));
     }
-    // 2. Memproses Data & Foto (Jantung Materi Hari Ini)
+
     public function store(Request $request)
     {
-        // A. Validasi (Cek Kelengkapan)
         $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Maks 2MB
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-        // B. Logika Upload Foto (Anti-Error)
+
         $imagePath = null;
+
         if ($request->hasFile('image')) {
-            // Simpan foto ke folder 'storage/app/public/reports'
             $imagePath = $request->file('image')->store('reports', 'public');
         }
-        // C. Simpan ke Database
+
         Report::create([
-            'user_id' => Auth::id(), // Otomatis ambil ID warga yang login
+            'user_id' => Auth::id(),
             'title' => $request->title,
             'description' => $request->description,
             'location' => $request->location,
-            'image' => $imagePath, // Simpan alamat fotonya saja
-            'status' => '0', // Default Pending
+            'image' => $imagePath,
+            'status' => '0',
         ]);
         return redirect()->back()->with('success', 'Laporan berhasil
 dikirim!');

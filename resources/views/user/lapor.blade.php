@@ -23,7 +23,8 @@
                         </div>
                         <div class="mb-3">
                             <label>Lokasi Kejadian</label>
-                            <input type="text" name="location" class="form-control" placeholder="Contoh: Depan Pasar Cibinong">
+                            <input type="text" name="location" class="form-control"
+                                placeholder="Contoh: Depan Pasar Cibinong">
                         </div>
                         <div class="mb-3">
                             <label>Bukti Foto</label>
@@ -34,6 +35,37 @@
                         <button type="submit" class="btn btn-primary w-100">KIRIM
                             LAPORAN</button>
                     </form>
+                </div>
+            </div>
+            <div class="card mt-4">
+                <div class="card-header bg-success text-white">Riwayat Laporan Saya</div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Judul</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($myReports as $item)
+                                <tr>
+                                    <td>{{ $item->created_at->format('d-m-Y') }}</td>
+                                    <td>{{ $item->title }}</td>
+                                    <td>
+                                        @if ($item->status == '0')
+                                            <span class="badge bg-danger">Menunggu</span>
+                                        @elseif($item->status == 'proses')
+                                            <span class="badge bg-warning">Diproses</span>
+                                        @else
+                                            <span class="badge bg-success">Selesai</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

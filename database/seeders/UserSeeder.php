@@ -18,11 +18,11 @@ class UserSeeder extends Seeder
         'identity_number' => '11111',
         'name' => 'Admin Utama',
         'email' => 'admin@sigap.com',
-        'password' => Hash::make('password'), // Password dienkripsi
+        'password' => Hash::make('password'),
         'role' => 'admin',
         'phone' => '08123456789'
         ]);
-        
+
         // Membuat Akun Warga
         User::create([
         'identity_number' => '32010001',
