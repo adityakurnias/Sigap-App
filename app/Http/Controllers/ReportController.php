@@ -12,6 +12,7 @@ class ReportController extends Controller
         $myReports = Report::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get();
+
         return view('user.lapor', compact('myReports'));
     }
 
@@ -37,7 +38,22 @@ class ReportController extends Controller
             'image' => $imagePath,
             'status' => '0',
         ]);
-        return redirect()->back()->with('success', 'Laporan berhasil
-dikirim!');
+
+        return redirect()->back()->with('success', 'Laporan berhasil dikirim!');
+    }
+
+    public function show(Report $report)
+    {
+        $report->load(['user', 'responses.user']);
+        return view('admin.detail', compact('report'));
+    }
+    public function update(Request $request, Report $report)
+    {
+        $data = $request->validate([
+            'status' => 'required|in:0,proses,selesai',
+        ]);
+
+        $report->update($data);
+        return back()->with('success', 'Status laporan berhasil diperbarui!');
     }
 }

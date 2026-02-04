@@ -23,8 +23,8 @@
                             <td>{{ $report->title }}</td>
                             <td>
                                 @if ($report->image)
-                                                            <img src="{{ asset('storage/' . $report->image)
-                                    }}" width="100" class="rounded">
+                                    <img src="{{ asset('storage/' . $report->image)
+                                                }}" width="100" class="rounded">
                                 @else
                                     <span class="text-muted">Tidak ada foto</span>
                                 @endif
@@ -39,7 +39,7 @@
                                 @endif
                             </td>
                             <td>
-                                <a href="#" class="btn btn-info btn-sm">Cek
+                                <a href="{{ route('report.show', $report->id) }}" class="btn btn-info btn-sm text-white">Cek
                                     Detail</a>
                             </td>
                         </tr>
