@@ -8,12 +8,14 @@ class ReportController extends Controller
 {
     public function index()
     {
-        // LOGIKA: Ambil laporan DIMANA (Where) id pemiliknya == ID saya yang sedang login
-        $myReports = Report::where('user_id', Auth::id())
+        // Query: "Tampilkan laporan milik SAYA saja"
+        // Logika: WHERE user_id = ID Saya yang sedang login
+        $reports = Report::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
+
             ->get();
 
-        return view('user.lapor', compact('myReports'));
+        return view('user.lapor', compact('reports'));
     }
 
     public function store(Request $request)

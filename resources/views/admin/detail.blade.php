@@ -18,7 +18,7 @@
                         <tr>
                             <th>Status</th>
                             <td>
-                                @if($report->status == '0')
+                                @if ($report->status == '0')
                                     <span class="badge bg-danger">Pending</span>
                                 @elseif($report->status == 'proses')
                                     <span class="badge bg-warning">Proses</span>
@@ -32,7 +32,7 @@
                             <td>: {{ $report->description }}</td>
                         </tr>
                     </table>
-                    @if($report->image)
+                    @if ($report->image)
                         <img src="{{ asset('storage/' . $report->image) }}" class="img-fluid rounded mt-3">
                     @endif
                 </div>
@@ -49,32 +49,49 @@
                             <select name="status" class="form-select" onchange="this.form.submit()">
                                 <option value="0" {{ $report->status == '0' ? 'selected' : '' }}>Pending</option>
                                 <option value="proses" {{ $report->status == 'proses' ? 'selected' : '' }}>Proses</option>
-                                <option value="selesai" {{ $report->status == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                                <option value="selesai" {{ $report->status == 'selesai' ? 'selected' : '' }}>Selesai
+                                </option>
                             </select>
                             <small class="text-muted">*Pilih status untuk mengubah otomatis</small>
                         </div>
                     </form>
                     <hr>
-                    <form action="{{ route('response.store') }}" method="POST">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    <form action="{{ route('response.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="report_id" value="{{ $report->id }}">
                         <div class="mb-3">
                             <label class="fw-bold">Berikan Tanggapan:</label>
-                            <textarea name="response_text" class="form-control" rows="4"
-                                placeholder="Ketik balasan untuk warga..." required></textarea>
+                            <textarea name="response_text" class="form-control" rows="4" placeholder="Ketik balasan untuk warga..." required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">KIRIM
-                            TANGGAPAN</button>
+                        <div class="mb-3">
+                            <label>Bukti Foto (Opsional)</label>
+                            <input type="file" name="image" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">KIRIM TANGGAPAN</button>
                     </form>
                     <div class="mt-4">
                         <h6 class="fw-bold">Riwayat Percakapan:</h6>
-                        @if($report->responses->count() > 0)
-                            @foreach($report->responses as $response)
+                        @if ($report->responses->count() > 0)
+                            @foreach ($report->responses as $response)
                                 <div class="alert alert-secondary p-2 mb-2">
                                     <small class="fw-bold text-dark">{{ $response->user->name }} (Admin)</small>
-                                    <small class="text-muted float-end">{{ $response->created_at->diffForHumans() }}</small>
+                                    <small
+                                        class="text-muted float-end">{{ $response->created_at->diffForHumans() }}</small>
                                     <p class="mb-0 mt-1 text-dark small">{{ $response->response_text }}</p>
                                 </div>
+                                @if ($response->image)
+                                    <img src="{{ asset('storage/' . $response->image) }}" width="200"
+                                        class="mt-2 rounded">
+                                @endif
                             @endforeach
                         @else
                             <p class="text-center text-muted small">Belum ada tanggapan.</p>

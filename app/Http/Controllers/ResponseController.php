@@ -10,17 +10,26 @@ class ResponseController extends Controller
 {
     public function store(Request $request)
     {
-        // 1. Validasi
         $request->validate([
-            'report_id' => 'required|exists:reports,id',
+            'report_id' => 'required',
             'response_text' => 'required',
+            'image' => 'nullable|image|max:2048', // Validasi: Harus Gambar, Maks 2MB
         ]);
-        // 2. Simpan ke Tabel Responses
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            // UPLOAD: Simpan file fisik ke folder 'public/responses'
+            $imagePath = $request->file('image')->store(
+                'responses',
+                'public'
+            );
+        }
         Response::create([
             'report_id' => $request->report_id,
             'user_id' => Auth::id(),
             'response_text' => $request->response_text,
+            'image' => $imagePath, // Simpan hanya alamatnya di DB
         ]);
-        return back()->with('success', 'Tanggapan berhasil dikirim!');
+        return back()->with('success', 'Tanggapan & Bukti terkirim!');
     }
 }

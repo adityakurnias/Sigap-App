@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Report;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
@@ -14,7 +15,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'username' => ['required'],
             'password' => ['required'],
         ]);
 
@@ -28,8 +29,37 @@ class AuthController extends Controller
             }
         }
         return back()->withErrors([
-            'email' => 'Email atau Password salah!',
+            'username' => 'Username atau Password salah!',
         ]);
+    }
+
+    // 1. Menampilkan Form Daftar
+    public function showRegisterForm()
+    {
+        return view('auth.register');
+    }
+    // 2. Proses Simpan Warga Baru
+    public function register(Request $request)
+    {
+
+        // VALIDASI: Pastikan NIK & Username belum pernah dipakai
+        $data = $request->validate([
+            'nik' => 'required|numeric|unique:users',
+            'name' => 'required',
+            'username' => 'required|unique:users',
+            'password' => 'required|min:6',
+            'telp' => 'required|numeric',
+        ]);
+        // CREATE: Simpan ke Database
+        User::create([
+            'nik' => $data['nik'],
+            'name' => $data['name'],
+            'username' => $data['username'],
+            'password' => $data['password'], // Di-hash otomatis oleh model User
+            'telp' => $data['telp'],
+            'role' => 'masyarakat', // Default role otomatis Masyarakat
+        ]);
+        return redirect()->route('login')->with('success', 'Akun berhasil dibuat! Silakan login.');
     }
     public function logout(Request $request)
     {
