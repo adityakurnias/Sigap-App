@@ -6,7 +6,7 @@ use App\Http\Controllers\ResponseController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-return redirect()->route('login');
+    return redirect()->route('login');
 });
 
 
@@ -35,5 +35,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/report/{report}', [ReportController::class, 'update'])->name('report.update');
 
     Route::post('/response', [ResponseController::class, 'store'])->name('response.store');
+
+    Route::get('/report/export/pdf', [
+        ReportController::class,
+        'exportPdf'
+    ])->name('report.export');
 
 });

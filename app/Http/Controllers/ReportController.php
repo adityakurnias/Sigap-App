@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Report;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 class ReportController extends Controller
@@ -57,5 +58,15 @@ class ReportController extends Controller
 
         $report->update($data);
         return back()->with('success', 'Status laporan berhasil diperbarui!');
+    }
+
+    public function exportPdf()
+    {
+        // Ambil semua data laporan
+        $reports = Report::all();
+        // Load View khusus PDF (nanti kita buat)
+        $pdf = Pdf::loadView('admin.print', ['reports' => $reports]);
+        // Download file
+        return $pdf->download('laporan-pengaduan.pdf');
     }
 }
