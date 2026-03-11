@@ -65,6 +65,32 @@
                                 var marker = L.marker([-6.200000, 106.816666], {
                                     draggable: true
                                 }).addTo(map);
+
+                                // ====================================================================
+                                // FITUR AUTO-DETECT LOKASI PENGGUNA (GPS BROWSER)
+                                // ====================================================================
+                                if (navigator.geolocation) {
+                                    navigator.geolocation.getCurrentPosition(function(position) {
+                                            // 1. Ambil koordinat GPS asli dari perangkat
+                                            var lat = position.coords.latitude;
+                                            var lng = position.coords.longitude;
+                                            // 2. Terbangkan peta ke lokasi asli pengguna
+
+                                            map.setView([lat, lng], 16);
+                                            marker.setLatLng([lat, lng]);
+                                            // 3. Simpan koordinat ke form rahasia untuk database
+                                            document.getElementById("latitude").value = lat;
+                                            document.getElementById("longitude").value = lng;
+                                            // 4. Minta Leaflet menerjemahkan jalan
+                                            getAddress(lat, lng);
+                                        }, function() {
+                                            alert("Akses lokasi ditolak. Peta tetap berada di lokasi default
+                                                (Jakarta).
+                                                ");
+                                            });
+                                    }
+                                }
+
                                 // --- FUNGSI BARU: AMBIL NAMA JALAN (REVERSE GEOCODING) ---
                                 function getAddress(lat, lng) {
                                     // Pasang loading text biar user tau sistem lagi mikir
@@ -146,31 +172,51 @@
                                                 class="mt-2 rounded">
                                         @endif
                                     </td>
-                                    {{-- KOLOM 2: STATUS & BALASAN --}}
-                                    <td>
-                                        {{-- Label Status --}}
-                                        @if ($item->status == '0')
-                                            <span class="badge bg-danger">Menunggu</span>
-                                        @elseif($item->status == 'proses')
-                                            <span class="badge bg-warning">Diproses</span>
-                                        @else
-                                            <span class="badge bg-success">Selesai</span>
-                                        @endif
-                                        {{-- Pesan Balasan Admin --}}
+                                    <td style="min-width: 300px;">
+                                        {{-- LABEL STATUS --}}
+                                        <div class="mb-3">
+                                            @if ($item->status == '0')
+                                                <span class="badge bg-danger px-3 py-2 rounded-pill">Menunggu</span>
+                                            @elseif($item->status == 'proses')
+                                                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">Sedang
+                                                    Diproses</span>
+                                            @else
+                                                <span class="badge bg-success px-3 py-2 rounded-pill">Selesai</span>
+                                            @endif
+
+                                        </div>
+                                        {{-- TIMELINE VERTICAL (Perulangan untuk semua riwayat tindakan petugas) --}}
                                         @if ($item->responses->count() > 0)
-                                            <div class="mt-2 p-2 border rounded bg-light">
-                                                <small><strong>Admin:</strong>
-                                                    {{ $item->responses->last()->response_text }}</small>
+                                            <div class="ps-3 mt-2" style="border-left: 3px solid #dee2e6;">
+                                                @foreach ($item->responses as $resp)
+                                                    <div class="position-relative mb-3">
+                                                        {{-- Titik Bullet Timeline --}}
+                                                        <span class="position-absolute bg-primary rounded-circle"
+                                                            style="width: 12px; height: 12px; left: -23px; top: 4px; border: 2px solid white;"></span>
 
-                                                {{-- [FIX] MENAMPILKAN FOTO BALASAN ADMIN --}}
+                                                        {{-- Kotak Pesan --}}
 
-                                                @if ($item->responses->last()->image)
-                                                    <br>
+                                                        <div class="bg-light p-3 rounded-3 border shadow-sm">
+                                                            <small class="text-primary fw-bold d-block mb-1">
+                                                                {{ $resp->created_at->format('d M Y, H:i') }}
+                                                            </small>
 
-                                                    <img src="{{ asset('storage/' . $item->responses->last()->image) }}"
-                                                        width="100" class="mt-1 rounded border">
-                                                @endif
+                                                            <p class="mb-2 text-dark small"><strong>Petugas:</strong>
+                                                                {{ $resp->response_text }}</p>
+
+                                                            {{-- Foto Bukti --}}
+                                                            @if ($resp->image)
+                                                                <img src="{{ asset('storage/' . $resp->image) }}"
+                                                                    class="img-fluid rounded border"
+                                                                    style="max-height: 100px;">
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                @endforeach
                                             </div>
+                                        @else
+                                            <p class="text-muted small mt-2"><em>Belum ada tindakan dari
+                                                    petugas.</em></p>
                                         @endif
                                     </td>
                                 </tr>

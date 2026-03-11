@@ -2,10 +2,18 @@
 <html>
 
 <head>
-    <title>Laporan Pengaduan</title>
+    <title>Laporan Pengaduan SIGAP</title>
     <style>
         body {
-            font-family: sans-serif;
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+        }
+
+        .kop-surat {
+            text-align: center;
+            border-bottom: 3px solid black;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         table {
@@ -13,41 +21,79 @@
             border-collapse: collapse;
         }
 
-        table,
         th,
         td {
             border: 1px solid black;
+            padding: 6px;
+            vertical-align: top;
         }
 
-        th,
-        td {
-            padding: 8px;
-            text-align: left;
+        th {
+            background-color: #e0e0e0;
+            text-align: center;
+        }
+
+        .foto-bukti {
+            width: 90px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-top: 5px;
         }
     </style>
 </head>
 
 <body>
-    <h2 style="text-align: center;">REKAPITULASI LAPORAN PENGADUAN</h2>
+    <div class="kop-surat">
+        <h2 style="margin: 0;">SISTEM INFORMASI PENGADUAN (SIGAP)</h2>
+        <p style="margin: 5px 0 0 0;">Dokumen Resmi Rekapitulasi Penanganan
+            Laporan Warga</p>
+        <small>Dicetak pada: {{ date('d F Y, H:i') }}</small>
+    </div>
     <table>
         <thead>
             <tr>
-                <th>No</th>
-                <th>Tanggal</th>
-                <th>Pelapor</th>
-                <th>Isi Laporan</th>
-                <th>Status</th>
+                <th width="5%">No</th>
+                <th width="20%">Pelapor & Tanggal</th>
+
+                <th width="35%">Detail Keluhan & Foto Warga</th>
+                <th width="30%">Tindak Lanjut Admin & Foto</th>
+                <th width="10%">Status</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($reports as $index => $item)
                 <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $item->created_at->format('d/m/Y') }}</td>
-                    <td>{{ $item->user->name }}</td>
+                    <td style="text-align: center;">{{ $index + 1 }}</td>
+                    <td>
+                        <strong>{{ $item->user->name }}</strong><br>
+                        <small>{{ $item->created_at->format('d/m/Y H:i') }}</small>
+                    </td>
+                    <td>
+                        <strong>{{ $item->title }}</strong><br>
 
-                    <td>{{ $item->description }}</td>
-                    <td>{{ ucfirst($item->status) }}</td>
+                        {{ $item->description }}<br>
+                        {{-- [PENTING] DomPDF wajib menggunakan public_path() agar bisa mencetak gambar asli --}}
+                        @if ($item->image)
+                            <img src="{{ public_path('storage/' . $item->image) }}" class="foto-bukti">
+                        @endif
+                    </td>
+                    <td>
+                        {{-- [LOGIKA TIMELINE PDF] Menampilkan balasan terakhir beserta fotonya --}}
+                        @if ($item->responses->count() > 0)
+                            <small><b>Update:</b>
+                                {{ $item->responses->last()->created_at->format('d/m/Y') }}</small><br>
+                            {{ $item->responses->last()->response_text }}<br>
+                            @if ($item->responses->last()->image)
+                                <img src="{{ public_path('storage/' . $item->responses->last()->image) }}"
+                                    class="foto-bukti">
+                            @endif
+                        @else
+                            <small style="color: red;">Belum ditindaklanjuti</small>
+                        @endif
+                    </td>
+                    <td style="text-align: center; font-weight: bold;">
+                        {{ strtoupper($item->status == '0' ? 'Pending' : $item->status) }}
+                    </td>
                 </tr>
             @endforeach
         </tbody>
