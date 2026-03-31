@@ -10,7 +10,7 @@
             </marquee>
         </div>
         {{-- KOLOM KIRI: FORM LAPOR --}}
-        <div class="col-md-5">
+        <div class="col-md-5 mb-4">
 
             @if (session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
@@ -47,7 +47,7 @@
                             <input type="text" name="location" id="location_text" class="form-control mb-2"
                                 placeholder="Geser marker di peta, alamat akan muncul di sini..." required>
                             {{-- 2. WADAH PETA --}}
-                            <div id="map" style="height: 300px; border-radius: 1rem; border: none; box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);"></div>
+                            <div id="map" style="width: 100%; height: 300px; border-radius: 1rem; border: none; box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);"></div>
                             {{-- 3. KOORDINAT TERSEMBUNYI (Untuk Database) --}}
                             <input type="hidden" name="latitude" id="latitude">
                             <input type="hidden" name="longitude" id="longitude">
@@ -84,11 +84,8 @@
                                             // 4. Minta Leaflet menerjemahkan jalan
                                             getAddress(lat, lng);
                                         }, function() {
-                                            alert("Akses lokasi ditolak. Peta tetap berada di lokasi default
-                                                (Jakarta).
-                                                ");
-                                            });
-                                    }
+                                            alert("Akses lokasi ditolak. Peta tetap berada di lokasi default (Jakarta).");
+                                        });
                                 }
 
                                 // --- FUNGSI BARU: AMBIL NAMA JALAN (REVERSE GEOCODING) ---
@@ -148,7 +145,8 @@
                 <div class="card-header bg-success text-white">Riwayat Laporan Saya</div>
 
                 <div class="card-body">
-                    <table class="table table-hover table-striped">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
                         <thead>
                             <tr>
                                 <th>Tanggal</th>
@@ -223,6 +221,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    </div>
                 </div>
             </div>
         </div>
