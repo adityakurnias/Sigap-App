@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@yield('title') - SIGAP</title>
+    <title>@yield('title') - LaporDesa</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -13,7 +13,7 @@
     {{-- KONFIGURASI PWA AGAR BISA DI-INSTALL --}}
     <link rel="manifest" href="{{ asset('manifest.json') }}">
 
-    <meta name="theme-color" content="#0d6efd">
+    <meta name="theme-color" content="#059669">
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -21,12 +21,43 @@
             });
         }
     </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --bs-primary: #059669; 
+            --bs-primary-rgb: 5, 150, 105;
+            --bs-body-font-family: 'Inter', sans-serif;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-primary { --bs-btn-bg: #059669; --bs-btn-border-color: #059669; --bs-btn-hover-bg: #047857; --bs-btn-hover-border-color: #047857; --bs-btn-active-bg: #047857; --bs-btn-active-border-color: #047857; transition: all 0.3s ease; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.4); }
+        .bg-primary { background-color: #059669 !important; }
+        .text-primary { color: #059669 !important; }
+        .border-primary { border-color: #059669 !important; }
+        
+        .navbar.bg-primary {
+            background: rgba(5, 150, 105, 0.85) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .card {
+            border: none !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+        }
+    </style>
 </head>
 
-<body>
-    <nav class="navbar navbar-expand navbar-dark bg-primary mb-4">
+<body class="bg-light">
+    <nav class="navbar navbar-expand navbar-dark bg-primary mb-4 sticky-top shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="/">SIGAP APLIKASI</a>
+            <a class="navbar-brand fw-bold" href="/">LaporDesa</a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
                     {{-- LOGIKA 1: Jika yang datang adalah TAMU --}}

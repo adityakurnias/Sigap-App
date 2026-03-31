@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title', 'Tulis Pengaduan')
+@section('title', 'Lapor Infrastruktur Desa')
 @section('content')
     <div class="row">
         <div class="alert alert-info" role="alert">
@@ -15,7 +15,7 @@
             @if (session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
-            <div class="card shadow">
+            <div class="card shadow-lg border-0 rounded-4">
                 <div class="card-header bg-primary text-white">Tulis Laporan Baru</div>
                 <div class="card-body">
                     @if ($errors->any())
@@ -47,7 +47,7 @@
                             <input type="text" name="location" id="location_text" class="form-control mb-2"
                                 placeholder="Geser marker di peta, alamat akan muncul di sini..." required>
                             {{-- 2. WADAH PETA --}}
-                            <div id="map" style="height: 300px; border-radius: 10px; border: 1px solid #ccc;"></div>
+                            <div id="map" style="height: 300px; border-radius: 1rem; border: none; box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);"></div>
                             {{-- 3. KOORDINAT TERSEMBUNYI (Untuk Database) --}}
                             <input type="hidden" name="latitude" id="latitude">
                             <input type="hidden" name="longitude" id="longitude">
@@ -143,7 +143,7 @@
         </div>
         {{-- KOLOM KANAN: TABEL RIWAYAT --}}
         <div class="col-md-7">
-            <div class="card shadow">
+            <div class="card shadow-lg border-0 rounded-4">
 
                 <div class="card-header bg-success text-white">Riwayat Laporan Saya</div>
 

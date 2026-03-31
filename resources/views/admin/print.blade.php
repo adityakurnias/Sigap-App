@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Laporan Pengaduan SIGAP</title>
+    <title>Laporan Infrastruktur LaporDesa</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -44,9 +44,8 @@
 
 <body>
     <div class="kop-surat">
-        <h2 style="margin: 0;">SISTEM INFORMASI PENGADUAN (SIGAP)</h2>
-        <p style="margin: 5px 0 0 0;">Dokumen Resmi Rekapitulasi Penanganan
-            Laporan Warga</p>
+        <h2 style="margin: 0;">SISTEM PELAPORAN INFRASTRUKTUR DESA (LAPORDESA)</h2>
+        <p style="margin: 5px 0 0 0;">Dokumen Resmi Rekapitulasi Laporan Infrastruktur Warga</p>
         <small>Dicetak pada: {{ date('d F Y, H:i') }}</small>
     </div>
     <table>

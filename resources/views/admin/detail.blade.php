@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-7">
             <div class="card">
-                <div class="card-header text-white bg-primary">Detail Pengaduan</div>
+                <div class="card-header text-white bg-primary">Detail Laporan Infrastruktur</div>
                 <div class="card-body">
                     <table class="table table-borderless">
                         <tr>
